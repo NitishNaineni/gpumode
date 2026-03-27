@@ -41,7 +41,7 @@ module = load_inline(
 
 def custom_kernel(data: input_t) -> output_t:
     data, output = data
-    return module.vecsum(data, output)
+    return module.vecsum(data, output)[0]
 '''
 
 (here / "submission.py").write_text(submission)

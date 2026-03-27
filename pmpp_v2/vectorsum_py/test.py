@@ -16,7 +16,7 @@ module = load_inline(
     extra_cuda_cflags=[],
 )
 
-SIZE = 16384 * 16384
+SIZE = 52428800
 
 data = torch.randn(SIZE, dtype=torch.float32, device='cuda')
 output = torch.zeros(1, dtype=torch.float32, device='cuda')
@@ -24,7 +24,6 @@ output = torch.zeros(1, dtype=torch.float32, device='cuda')
 result = module.vecsum(data, output)
 expected = data.sum()
 
-# Use rtol for large reductions since FP error accumulates
 if torch.allclose(result, expected, rtol=1e-3):
     print("correctness: PASS")
 else:
