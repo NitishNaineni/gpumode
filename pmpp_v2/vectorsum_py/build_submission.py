@@ -1,10 +1,10 @@
-"""Combines vecadd.cu and vecadd.cpp into submission.py for popcorn submit."""
+"""Combines vecsum.cu and vecsum.cpp into submission.py for popcorn submit."""
 import sys
 from pathlib import Path
 
 here = Path(__file__).parent
-cuda_src = (here / "vecadd.cu").read_text()
-cpp_src = (here / "vecadd.cpp").read_text()
+cuda_src = (here / "vecsum.cu").read_text()
+cpp_src = (here / "vecsum.cpp").read_text()
 
 GPUS = {
     "A100": ("A100", "sm_80"),
@@ -13,14 +13,14 @@ GPUS = {
     "L4":   ("L4",   "sm_89"),
 }
 
-gpu = sys.argv[1] if len(sys.argv) > 1 else "A100"
+gpu = sys.argv[1] if len(sys.argv) > 1 else "B200"
 if gpu not in GPUS:
     print(f"Unknown GPU: {gpu}. Options: {', '.join(GPUS)}")
     sys.exit(1)
 
 gpu_name, arch = GPUS[gpu]
 
-submission = f'''#!POPCORN leaderboard vectoradd_v2
+submission = f'''#!POPCORN leaderboard vectorsum_v2
 #!POPCORN gpu {gpu_name}
 
 from torch.utils.cpp_extension import load_inline
@@ -31,17 +31,17 @@ CUDA_SRC = """{cuda_src}"""
 CPP_SRC = """{cpp_src}"""
 
 module = load_inline(
-    name='vecadd_module',
+    name='vecsum_module',
     cpp_sources=[CPP_SRC],
     cuda_sources=[CUDA_SRC],
-    functions=['vecadd'],
+    functions=['vecsum'],
     verbose=True,
     extra_cuda_cflags=['-arch={arch}', '--use_fast_math'],
 )
 
 def custom_kernel(data: input_t) -> output_t:
-    A, B, output = data
-    return module.vecadd(A, B, output)
+    data, output = data
+    return module.vecsum(data, output)
 '''
 
 (here / "submission.py").write_text(submission)

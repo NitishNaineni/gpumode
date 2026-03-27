@@ -1,12 +1,30 @@
+# Python
 .venv/
 __pycache__/
+*.pyc
 *.so
 *.o
-*.pyc
-.cache/
 *.egg-info/
 uv.lock
+.python-version
+
+# CUDA/C++ tooling
 .clangd
 compile_commands.json
+
+# Popcorn
 .popcorn.yaml
 .popcorn/
+
+# AI assistants
+.claude/
+.codex/
+
+# Editor/IDE
+.cache/
+.idea/
+.vscode/
+
+# Generated
+submission.py
+main.py

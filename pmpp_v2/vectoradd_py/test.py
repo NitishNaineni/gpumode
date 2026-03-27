@@ -13,7 +13,7 @@ module = load_inline(
     cuda_sources=[CUDA_SRC],
     functions=['vecadd'],
     verbose=True,
-    extra_cuda_cflags=[],
+    extra_cuda_cflags=['-arch=sm_86'],
 )
 
 SIZE = 16384
